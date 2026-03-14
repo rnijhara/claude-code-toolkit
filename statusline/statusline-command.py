@@ -4,9 +4,9 @@ Custom statusline for Claude Code.
 
 Reads the model's actual context window size from stdin JSON
 (context_window.context_window_size) instead of hardcoding 200K.
-Auto-compact fires at ~83% of context window by default (overridable via
-CLAUDE_AUTOCOMPACT_PCT_OVERRIDE env var). The percentage and bar scale to
-whichever limit is active.
+Auto-compact reserves a fixed 33K token buffer regardless of context window size
+(e.g. 167K for 200K, 967K for 1M). The percentage and bar scale to whichever
+limit is active.
 
 Auto-compact is on when: autoCompactEnabled is true (default) in settings.json
 AND neither DISABLE_COMPACT nor DISABLE_AUTO_COMPACT env vars are set.
@@ -15,7 +15,7 @@ import json
 import os
 import sys
 
-DEFAULT_COMPACT_PCT = 83
+AUTOCOMPACT_BUFFER = 33000
 
 SETTINGS_PATH = os.path.expanduser("~/.claude.json")
 
@@ -49,8 +49,7 @@ if os.environ.get("DISABLE_COMPACT") or os.environ.get("DISABLE_AUTO_COMPACT"):
 
 context_window = data.get("context_window", {})
 context_window_size = context_window.get("context_window_size", 200000)
-compact_pct = int(os.environ.get("CLAUDE_AUTOCOMPACT_PCT_OVERRIDE", DEFAULT_COMPACT_PCT))
-autocompact_threshold = int(context_window_size * compact_pct / 100)
+autocompact_threshold = context_window_size - AUTOCOMPACT_BUFFER
 effective_limit = autocompact_threshold if auto_compact_on else context_window_size
 current_usage = context_window.get("current_usage")
 
