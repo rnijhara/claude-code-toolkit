@@ -2,10 +2,11 @@
 """
 Custom statusline for Claude Code.
 
-Detects whether auto-compact is enabled to show the effective context limit.
-Auto-compact fires at 167K tokens (context_window 200K - 20K margin - 13K buffer).
-When off, the full 200K is the ceiling. The percentage and bar scale to whichever
-limit is active, and tokens are shown as e.g. "38K/167K" or "38K/200K".
+Reads the model's actual context window size from stdin JSON
+(context_window.context_window_size) instead of hardcoding 200K.
+Auto-compact fires at ~83% of context window by default (overridable via
+CLAUDE_AUTOCOMPACT_PCT_OVERRIDE env var). The percentage and bar scale to
+whichever limit is active.
 
 Auto-compact is on when: autoCompactEnabled is true (default) in settings.json
 AND neither DISABLE_COMPACT nor DISABLE_AUTO_COMPACT env vars are set.
@@ -14,8 +15,7 @@ import json
 import os
 import sys
 
-CONTEXT_WINDOW_SIZE = 200000
-AUTOCOMPACT_THRESHOLD = 167000
+DEFAULT_COMPACT_PCT = 83
 
 SETTINGS_PATH = os.path.expanduser("~/.claude.json")
 
@@ -47,9 +47,11 @@ except Exception:
 if os.environ.get("DISABLE_COMPACT") or os.environ.get("DISABLE_AUTO_COMPACT"):
     auto_compact_on = False
 
-effective_limit = AUTOCOMPACT_THRESHOLD if auto_compact_on else CONTEXT_WINDOW_SIZE
-
 context_window = data.get("context_window", {})
+context_window_size = context_window.get("context_window_size", 200000)
+compact_pct = int(os.environ.get("CLAUDE_AUTOCOMPACT_PCT_OVERRIDE", DEFAULT_COMPACT_PCT))
+autocompact_threshold = int(context_window_size * compact_pct / 100)
+effective_limit = autocompact_threshold if auto_compact_on else context_window_size
 current_usage = context_window.get("current_usage")
 
 if current_usage:
