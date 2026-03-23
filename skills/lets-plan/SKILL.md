@@ -23,7 +23,8 @@ Browse `.planning/` for completed plans in similar areas. They provide useful pa
 2. **Surface decisions explicitly.** When a design choice comes up, present the options with trade-offs and make a recommendation. Document the chosen option AND the rejected alternatives with reasons.
 3. **Think about edge cases and UAT early.** Don't treat these as afterthoughts. Ask "what could go wrong?" and "how would we manually verify this?" during discussion, not after the plan is written.
 4. **Break into phases.** Each phase should be independently implementable and testable. Consider dependencies between phases.
-5. **Be specific about changes.** Name exact files, describe what changes in each, write test cases at assertion level. The plan should be detailed enough for an implementation agent to execute without ambiguity.
+5. **Tests are the spec.** For each phase, define the tests first -- they describe expected behavior and serve as acceptance criteria. Then describe the code changes needed to make those tests pass. This is test-driven development: the plan specifies what "done" looks like (tests) before how to get there (implementation).
+6. **Be specific about changes.** Name exact files, describe what changes in each, write test cases at assertion level. The plan should be detailed enough for an implementation agent to execute without ambiguity.
 
 ## Creating the Plan File
 
@@ -32,6 +33,7 @@ When the user is ready (they'll say so, or you'll have covered enough ground), c
 Key rules:
 - **Why section is required.** Every plan needs motivation and context in one place.
 - **Design Decisions is the most important section.** A plan without explicit decisions is incomplete.
+- **Tests come before Changes in each phase.** Tests define the spec; changes describe how to make them pass. This ordering is intentional -- it drives TDD during implementation.
 - **Tests at assertion granularity** per phase, not vague "add tests for X."
 - **UAT Scenarios are required.** Step-by-step manual verification. Think adversarially. Include the scenarios where the user tries something unexpected (like typing "2m" instead of "120" for an interval).
 - **Edge Cases are required.** Named scenarios with how the system handles them.

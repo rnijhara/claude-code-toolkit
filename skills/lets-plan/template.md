@@ -26,13 +26,13 @@ Current state, what triggered this, why now. Combines motivation and context so 
 
 **Goal:** One sentence on what's delivered.
 
+**Tests (the spec):**
+- test description at assertion level
+- ...
+
 **Changes:**
 - `path/to/file.ts` -- description of what changes
 - `path/to/new-file.ts` (new) -- what it does
-
-**Tests:**
-- test description at assertion level
-- ...
 
 ## Files Summary
 
