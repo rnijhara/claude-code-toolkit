@@ -12,6 +12,8 @@ A Python script that displays model name, directory, git branch, and a context u
 
 ### `/skills` — Reusable Development Workflow Skills
 
+#### Development Workflow
+
 A four-skill workflow for planning, implementing, and releasing features:
 
 | Skill | Description |
@@ -29,6 +31,13 @@ The intended workflow:
 /lets-implement .planning/FEATURE.md  →  executes the plan phase by phase
 /lets-release minor  →  cuts a release
 ```
+
+#### Second Opinion & Research
+
+| Skill | Description |
+|-------|-------------|
+| `/codex` | Get a second opinion from OpenAI's Codex CLI on plans, code, or debugging. Reviews plans for gaps, code for bugs, and helps when you're stuck. |
+| `/grok` | Query xAI's Grok with native X/Twitter search. Fetch tweets, search discussions, check reactions -- anything that needs real-time X data. Requires an `XAI_API_KEY` in `~/.config/grok/.env`. |
 
 ## Installation
 
