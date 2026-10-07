@@ -1,11 +1,11 @@
 # Claude Code Custom Statusline
 
-A custom statusline script for Claude Code that displays the current model, working directory, git branch, and a context window usage bar.
+A custom statusline script for Claude Code that displays the current model, working directory, git branch, a context window usage bar, rate-limit usage, and session cost.
 
 Example output:
 
 ```
-[Claude 4.6 Opus] 📁 my-project |⚡️ main | [████████░░░░░░░░░░░░] 40.0% (67K/167K)
+[Opus 5.5] 📁 my-project | ⚡️ main | [████░░░░░░░░░░░░░░░░] 21.2% (120K/567K) | 🔋 5h 23% · 7d 41% | 💰 $1.23
 ```
 
 ## What it shows
@@ -13,7 +13,9 @@ Example output:
 - **Model** — the active Claude model
 - **Directory** — current working directory name
 - **Git branch** — current branch (if inside a git repo)
-- **Context usage** — a progress bar with percentage and token counts, scaled to the effective limit (167K with auto-compact on, 200K with it off)
+- **Context usage** — a progress bar with percentage and token counts, scaled to the effective limit. The window comes from the model's actual context size, optionally shrunk by `CLAUDE_CODE_AUTO_COMPACT_WINDOW` (it can't exceed the model's window). With auto-compact on, a fixed 33K buffer is reserved (e.g. 167K for 200K, 967K for 1M, 567K with `CLAUDE_CODE_AUTO_COMPACT_WINDOW=600000`)
+- **Rate limits** — 5-hour (session) and 7-day (weekly) usage percentages, when available
+- **Session cost** — total cost in USD for the current session
 
 ## Setup
 
@@ -29,11 +31,14 @@ Example output:
    chmod +x ~/.claude/statusline-command.py
    ```
 
-3. Open your Claude Code settings file at `~/.claude/settings.json` and add the `statusCommand` field:
+3. Open your Claude Code settings file at `~/.claude/settings.json` and add the `statusLine` field:
 
    ```json
    {
-     "statusCommand": "python3 ~/.claude/statusline-command.py"
+     "statusLine": {
+       "type": "command",
+       "command": "python3 ~/.claude/statusline-command.py"
+     }
    }
    ```
 
@@ -43,5 +48,5 @@ Example output:
 
 ## Requirements
 
-- Python 3
+- Python 3.9+
 - Claude Code CLI
