@@ -10,6 +10,8 @@ not grow beyond what the model supports).
 Auto-compact reserves a fixed 33K token buffer (e.g. 167K effective for a 200K
 window, 967K for 1M). The percentage and bar scale to whichever limit is active.
 
+The model segment includes the effort level (effort.level) when present.
+
 The rate-limit segment shows the 5-hour (session) and 7-day (weekly) usage
 percentages from rate_limits, followed by session cost.
 
@@ -27,6 +29,9 @@ SETTINGS_PATH = os.path.expanduser("~/.claude.json")
 data = json.load(sys.stdin)
 
 model = data["model"]["display_name"]
+effort_level = (data.get("effort") or {}).get("level")
+if effort_level:
+    model = f"{model} \u00b7 {effort_level}"
 current_dir = os.path.basename(data["workspace"]["current_dir"])
 
 git_branch = ""

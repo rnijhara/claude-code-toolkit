@@ -1,16 +1,16 @@
 # Claude Code Custom Statusline
 
-A custom statusline script for Claude Code that displays the current model, working directory, git branch, a context window usage bar, rate-limit usage, and session cost.
+A custom statusline script for Claude Code that displays the current model and effort level, working directory, git branch, a context window usage bar, rate-limit usage, and session cost.
 
 Example output:
 
 ```
-[Opus 5.5] 📁 my-project | ⚡️ main | [████░░░░░░░░░░░░░░░░] 21.2% (120K/567K) | 🔋 5h 23% · 7d 41% | 💰 $1.23
+[Opus 5.5 · high] 📁 my-project | ⚡️ main | [████░░░░░░░░░░░░░░░░] 21.2% (120K/567K) | 🔋 5h 23% · 7d 41% | 💰 $1.23
 ```
 
 ## What it shows
 
-- **Model** — the active Claude model
+- **Model** — the active Claude model, plus the effort level (e.g. `high`) when Claude Code reports one
 - **Directory** — current working directory name
 - **Git branch** — current branch (if inside a git repo)
 - **Context usage** — a progress bar with percentage and token counts, scaled to the effective limit. The window comes from the model's actual context size, optionally shrunk by `CLAUDE_CODE_AUTO_COMPACT_WINDOW` (it can't exceed the model's window). With auto-compact on, a fixed 33K buffer is reserved (e.g. 167K for 200K, 967K for 1M, 567K with `CLAUDE_CODE_AUTO_COMPACT_WINDOW=600000`)
